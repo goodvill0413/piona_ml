@@ -1,0 +1,91 @@
+🧩 PIONA 3단 시스템 (최종 통합 구조)
+
+⚡ 1️⃣ PIONA_TRADER — 자동매매 실행부
+주요 계획
+
+
+실거래 API(KIS) 기반 자동매매 담당.
+핵심 전략 4가지: LRL(30) + Donchian(20) + ATR(14,9) + EMA(10,30)
+이 전략으로 종목을 선별하고, ML의 결과가 오면 ML 판단을 우선 실행.
+
+매수(BUY), 익절(TAKE_PROFIT), 손절(STOP_LOSS), 매도(SELL), 유지(HOLD) 구조.
+
+ATR로 손절 1.5배, 익절 2배 자동 설정.
+
+Risk Manager가 포지션 감시·리밸런싱·일일 리포트 관리.
+
+전략은 단기 중심, 실시간 대응형 구조.
+
+파일 구성
+strategy.py       # LRL·Donchian·ATR·EMA 조합 매매전략
+trader.py         # KIS API 주문 실행
+risk_manager.py   # 익절·손절 감시 및 포트폴리오 관리
+
+
+🧠 2️⃣ PIONA_ML — 종합 판단 엔진
+주요 계획
+
+Analytics에서 받은 시장, 심리, 뉴스, 수급 데이터를 종합 입력.
+
+Logistic + LSTM 하이브리드 구조로 상승 확률 예측.
+
+매일 새벽 학습, 오전 9시 예측 실행 → 결과를 Trader로 전달.
+결과(ml_signal, rise_prob, risk_level)이 트레이더의 최종 판단 기준이 됨.
+주간 단위 모델 검증 및 자동 재학습 시스템 포함.
+
+
+파일 구성
+fetch_data.py           # 실시간 데이터 수집
+train_model_real.py     # 모델 학습
+predict_model_real.py   # 예측 실행 (JSON 출력)
+utils_indicators.py     # 보조지표 계산
+
+
+📊 3️⃣ PIONA_ANALYTICS — 시장 전체 분석부
+
+주요 계획
+시장의 “큰 그림”을 파악해 중장기 전략 방향을 제시.
+5대 시장분석: 거시경제, 수급, 심리, 뉴스, 시장반응.
+S&P와 코스피를 신창환의 변곡분석과 ADX(14)로 중장기 방향성을 찾는다
+
+4대 차트분석: 주요대상종목분석
+① 신창환의 변곡분석
+② 캔들과 차트 패턴 분석
+③ 지지·저항선 분석
+④ 피보나치 되돌림 비율 확인
+
+이렇게 얻은 시장의 방향성과 강도 결과, 그리고 종목평가를 ML에 전달하여 장기 필터로 사용.
+
+최종적으로 시장 신호와 매매신호를 생성.
+
+파일 구성
+market_analyzer.py         # 5대 시장분석
+chart_pattern_analyzer.py  # 변곡 +  지지·저항+·패턴+·피보나치
+report_generator.py        # 일·주간 리포트 생성
+score_calculator.py        # 점수 정규화 (0~100)
+
+
+🔗 전체 작동 흐름
+[Analytics]
+ └─ 시장·지표·심리 분석
+      ↓
+[ML]
+ └─ 상승확률 예측 및 판단
+      ↓
+[Trader]
+ └─ 실제 자동매매 실행 (KIS API)
+      ↓
+[Risk Manager]
+ └─ 포지션 감시 및 리밸런싱
+      ↓
+[Report]
+ └─ 일일·주간 보고서 생성
+
+
+🪶 요약 문장
+
+Analytics는 시장의 기후를 읽고,
+ML은 전체 판단을 내리며,
+Trader는 실제 행동으로 옮긴다.
+
+이게 바로 피오나 3단 시스템의 완전 구동 구조야 ✅음성 채팅이 종료됨

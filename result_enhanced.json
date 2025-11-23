@@ -1,0 +1,64 @@
+{
+  "005930": {
+    "symbol": "005930",
+    "current_price": 97900.0,
+    "analysis_time": "2025-11-08 08:11:39",
+    "ml_analysis": {
+      "ml_score": 11.56,
+      "confidence": "HIGH"
+    },
+    "inflection_analysis": {
+      "overall_score": 0,
+      "recommendation": "HOLD",
+      "active_signals": 0
+    },
+    "combined_score": -46.13,
+    "final_recommendation": "SELL",
+    "confidence_level": "MEDIUM",
+    "reasons": [
+      "하락 신호 (점수: -46.13)"
+    ]
+  },
+  "000660": {
+    "symbol": "000660",
+    "current_price": 580000.0,
+    "analysis_time": "2025-11-08 08:11:39",
+    "ml_analysis": {
+      "ml_score": 13.79,
+      "confidence": "HIGH"
+    },
+    "inflection_analysis": {
+      "overall_score": 0,
+      "recommendation": "HOLD",
+      "active_signals": 0
+    },
+    "combined_score": -43.45,
+    "final_recommendation": "SELL",
+    "confidence_level": "MEDIUM",
+    "reasons": [
+      "하락 신호 (점수: -43.45)",
+      "20일선 위 거래"
+    ]
+  },
+  "373220": {
+    "symbol": "373220",
+    "current_price": 463500.0,
+    "analysis_time": "2025-11-08 08:11:39",
+    "ml_analysis": {
+      "ml_score": 11.56,
+      "confidence": "HIGH"
+    },
+    "inflection_analysis": {
+      "overall_score": 0,
+      "recommendation": "HOLD",
+      "active_signals": 0
+    },
+    "combined_score": -46.13,
+    "final_recommendation": "SELL",
+    "confidence_level": "MEDIUM",
+    "reasons": [
+      "하락 신호 (점수: -46.13)",
+      "20일선 위 거래"
+    ]
+  }
+}

@@ -1,0 +1,144 @@
+⚙️ PIONA SYSTEM — 3대 구성요소 (정식 구조 v1.1)
+Ⅰ. 개요
+
+PIONA는 인간 트레이더의 사고 구조를 모사한 3대 계층 시스템이다.
+
+CREON Plus → 감각과 분석(눈, 귀, 피부)
+PIONA_ML → 판단(두뇌와 직관)
+PIONA_TRADER → 행동(손, 실행력)
+
+Ⅱ. 시스템 흐름
+[CREON Plus / 분석기] 
+     ↓
+[PIONA_ML / 판단기]
+     ↓
+[KIS PAPER / 트레이더]
+
+Ⅲ. PIONA_ANALYTICS (Creon Plus 기반 분석기)
+
+역할: 시장의 기후와 구조를 감지하고 점수화한다.
+이는 단순 시세 피드가 아닌, 시장 해석 엔진이다.
+
+🔹 시장분석 5대 축
+
+거시경제 분석 — 코스피, 금리, 환율, 유가, 글로벌 흐름
+
+수급 분석 — 외인·기관·개인, 공매도, 수급 밸런스
+
+심리 분석 — 공포탐욕지수, 거래량, 변동성
+
+뉴스·공시 분석 — 긍부정 NLP 기반 섹터별 반응
+
+시장반응 분석 — 섹터 강도, 체결속도, 회전율
+
+⚙️ 향후 확장: 유동성 분석, 옵션 포지션 추정
+
+🔹 기술분석 4대 축
+
+신창환 변곡이론 — 시간 변곡(51·88·26일), T/P 비율
+
+필승 패턴이론 — 박스권, 쌍바닥, 삼중천정 등 군중형태
+
+지지·저항 분석 — 기억가격대, 리테스트 구간, 다중 프레임
+
+피보나치 분석 — 되돌림·확장·클러스터, 비율의 질서
+
+⚠️ 각 축은 단순 믹싱이 아니라 독립 발전 체계.
+각각 별도의 알고리즘과 버전 히스토리를 가진다.
+
+🔹 ScoreCalculator
+
+시장분석(60%) + 기술분석(40%)
+
+최종 점수, 코멘트 산출
+
+출력 파일: score.json
+
+🔹 ReportGenerator
+
+매일 분석기(PIONA_ANALYTICS)에서 리포트 생성됨
+
+트레이더가 아니라 분석기의 결과물임.
+
+일일 리포트, 주간 요약, TOP3 종목 자동 산출
+
+Ⅳ. PIONA_ML (머신러닝 판단 엔진)
+
+역할:
+분석기에서 생성된 점수를 받아 매매 신호를 판단한다.
+
+입력: score.json
+
+모델: Logistic + LSTM Hybrid
+
+출력:
+
+{
+  "symbol": "005930",
+  "signal": "BUY",
+  "rise_prob": 0.82,
+  "risk_level": "LOW"
+}
+
+
+예측 스크립트: predict_model_real.py
+
+학습: 과거 리포트 + 시장 점수 데이터 기반
+
+Ⅴ. PIONA_TRADER (KIS PAPER 실행 엔진)
+
+역할:
+ML의 판단(signal.json)을 읽어 모의 주문을 실행하는 “손”.
+여기서는 전략만 적용되고, 리포트는 생성하지 않는다.
+
+🔹 전략 구조
+
+ATR (Average True Range) → 변동성 기반 손익폭 설정
+
+LRL (Linear Regression Line) → 추세 방향 검증
+
+EMA (Exponential Moving Average) → 신호 필터링
+
+Donchian Channel → 돌파 진입, 트레일링 기준
+
+📈 이 네 가지는 트레이더 내부의 전략 모듈(strategy.py) 에 반영되어
+ML이 생성한 신호를 검증하고, 매매 타이밍을 세밀하게 조정한다.
+
+🔹 기능 요약
+
+입력: signal.json
+
+주문 실행: KIS PAPER API
+
+체결·잔고 관리
+
+분할매수, 익절/손절 자동화
+
+로그 저장: trader_log_YYYYMMDD.txt
+
+결과 보고는 다음날 분석기 리포트로 통합
+
+Ⅵ. 데이터 흐름 요약
+[CREON / 분석기]
+    ├─ MarketAnalyzer (5대 시장분석)
+    ├─ ChartPatternAnalyzer (4대 기술분석)
+    └─ ScoreCalculator → score.json
+            ↓
+[PIONA_ML / 판단기]
+    └─ predict_model_real.py → signal.json
+            ↓
+[KIS_TRADER / 실행기]
+    ├─ strategy.py (ATR + LRL + EMA + Donchian)
+    └─ auto_trader_kis_final.py (모의 주문 실행)
+
+Ⅶ. 핵심 철학
+
+피오나는 “시장 구조의 해석”을 기반으로 한
+감각–판단–행동의 자동화 시스템이다.
+
+분석기는 시장의 리듬을 해석하고,
+ML은 그 리듬의 방향을 예측하며,
+트레이더는 그것을 행동으로 옮긴다.
+
+RSI나 MACD 같은 결과값이 아니라,
+시장 리듬의 원리를 이해하고 재현하는 시스템이다

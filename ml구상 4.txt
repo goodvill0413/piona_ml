@@ -1,0 +1,87 @@
+🧩 피오나 3단 시스템 — 원래 설계 의도
+1️⃣ PIONA_ANALYTICS (분석기)
+
+시장의 “기후”를 읽는 두뇌 — 신창환 + 필승 이론 기반 분석
+거시경제·수급·심리·뉴스·시장반응의 5대 분석으로 시장 점수를 계산.
+이게 ML로 들어가는 입력 데이터가 돼.
+
+📂 주요 파일:
+market_analyzer.py, chart_pattern_analyzer.py, score_calculator.py, report_generator.py
+📈 핵심 역할:
+
+변곡분석(51·26·13일)
+
+필승 가격대(지지·저항선, 박스권, 옵션 핀닝가)
+
+수급 역발상 로직
+→ score.json 형태로 ML에 전달
+
+ML구상 3
+
+ML구상 3
+
+2️⃣ PIONA_ML (머신러닝 판단부)
+
+분석기에서 나온 데이터로 “결정”을 내리는 두뇌
+Logistic + LSTM 하이브리드 구조로 상승 확률 예측과 신호 판단 수행.
+
+📂 주요 파일:
+fetch_data.py, train_model_real.py, predict_model_real.py, utils_indicators.py
+📊 출력:
+
+{
+  "symbol": "005930",
+  "signal": "BUY",
+  "rise_prob": 0.81,
+  "risk_level": "LOW"
+}
+
+
+→ Trader로 전달되어 모의주문 실행
+
+ML구상 2
+
+3️⃣ PIONA_TRADER (자동매매 실행부)
+
+ML이 내린 결정을 실제 행동으로 옮기는 “손”
+KIS PAPER API 기반으로 매수·매도·익절·손절을 처리.
+Risk Manager가 포지션 감시, 리밸런싱, 리포트까지 담당.
+
+📂 주요 파일:
+strategy.py, trader.py, risk_manager.py
+🪶 핵심:
+
+LRL(30) + Donchian(20) + ATR(14,9) + EMA(10,30)
+
+익절 2배 / 손절 1.5배 자동 설정
+
+morning_report 로 일일 결과 기록
+
+ML구상 2
+
+🔗 전체 데이터 흐름
+[CREON + Analytics] → score.json
+        ↓
+[ML Engine] → signal.json
+        ↓
+[KIS Trader] → 주문 실행 / 리포트
+
+💎 요약 철학
+
+Analytics는 시장의 ‘기후’를 읽고,
+ML은 ‘판단’을 내리며,
+Trader는 ‘행동’으로 옮긴다.
+
+이게 바로 피오나 시스템의 3단 두뇌 구조야. ✅
+
+ML구상 2
+
+즉,
+
+Creon은 데이터 수집기
+
+Analytics는 시장 해석기
+
+ML은 판단 엔진
+
+KIS는 실행기
